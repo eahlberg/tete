@@ -2,7 +2,7 @@
 let
   hsPkgs = pkgs.haskellPackages;
   hsLib = pkgs.haskell.lib;
-  devTools = [ hsPkgs.cabal-install pkgs.dbmate ];
+  devTools = [ hsPkgs.cabal-install ];
 in hsPkgs.developPackage {
   root = ./.;
   withHoogle = false;

@@ -1,7 +1,8 @@
 {
   inputs = {
     nixpkgs.url =
-      "https://github.com/NixOS/nixpkgs/archive/32e940c7c420600ef0d1ef396dc63b04ee9cad37.tar.gz";
+      # Sat Nov 23 05:11:19 PM CET 2024
+      "https://github.com/NixOS/nixpkgs/archive/057f63b6dc1a2c67301286152eb5af20747a9cb4.tar.gz";
     flake-utils.url = "github:numtide/flake-utils";
   };
 

@@ -53,24 +53,46 @@ extra-doc-files:    CHANGELOG.md
 common warnings
     ghc-options: -Wall
 
+    default-extensions:
+      NoImplicitPrelude
+      OverloadedStrings
+      RecordWildCards
+      LambdaCase
+
 library
     -- Import common warning flags.
     import:           warnings
 
     -- Modules exported by the library.
-    exposed-modules:  Lib
+    exposed-modules:
+      Tete.Main,
+      Tete.Timer.PrettyPrint,
+      Tete.Timer,
+      Tete.Timer.Timer
 
     -- Modules included in this library but not exported.
-    -- other-modules:
+    other-modules:
+      Tete.Prelude,
+      Tete.Timer.DB,
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base ^>=4.18.2.1
+    build-depends:
+      base ^>=4.18.2.1,
+      boxes,
+      containers,
+      directory,
+      extra,
+      text,
+      sqlite-simple,
+      time,
+      optparse-applicative,
+      unix
 
     -- Directories containing source files.
-    hs-source-dirs:   src
+    hs-source-dirs:   lib
 
     -- Base language which the package is written in.
     default-language: GHC2021
@@ -94,7 +116,7 @@ executable tete
         tete
 
     -- Directories containing source files.
-    hs-source-dirs:   app
+    hs-source-dirs:   src
 
     -- Base language which the package is written in.
     default-language: GHC2021
@@ -124,4 +146,8 @@ test-suite tete-test
     -- Test dependencies.
     build-depends:
         base ^>=4.18.2.1,
-        tete
+        containers,
+        hspec,
+        tete,
+        time,
+        text
