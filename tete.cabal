@@ -112,8 +112,17 @@ executable tete
 
     -- Other library packages from which modules are imported.
     build-depends:
-        base ^>=4.18.2.1,
-        tete
+      base ^>=4.18.2.1,
+      tete,
+      boxes,
+      containers,
+      directory,
+      extra,
+      text,
+      sqlite-simple,
+      time,
+      optparse-applicative,
+      unix
 
     -- Directories containing source files.
     hs-source-dirs:   src
