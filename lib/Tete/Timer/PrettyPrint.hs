@@ -14,15 +14,23 @@ tasksText tasks =
 taskBoxes :: [Task] -> Box
 taskBoxes = vsep 1 left . fmap taskBox
 
+totalTime :: Timer -> Maybe NominalDiffTime
+totalTime Timer {..} = diffUTCTime <$> timerStopTime <*> pure timerStartTime
+
 taskBox :: Task -> Box
 taskBox Task {..} =
   let timerList = Set.toList taskPeriods
-      timerBoxes =
+      header = [text (unpack taskName)]
+      body =
         case timerList of
           [] -> [text "No timers"]
           _ -> timerBox <$> timerList
-      timerNameBox = text (unpack taskName)
-   in vsep 0 left ([timerNameBox] <> timerBoxes)
+      mTimersTotalTime = (fmap sum . mapM totalTime) timerList
+      footer =
+        case mTimersTotalTime of
+          Nothing -> mempty
+          Just timersTotalTime -> [text (unpack (Text.intercalate ": " ["Total time", formatElapsedTime timersTotalTime]))]
+   in vsep 0 left (header <> body <> footer)
 
 timerBox :: Timer -> Box
 timerBox Timer {..} =
@@ -31,7 +39,7 @@ timerBox Timer {..} =
           Nothing ->
             ["RUNNING"]
           Just stopTime ->
-            [formatTime' stopTime, formatElapsedTime timerStartTime stopTime]
+            [formatTime' stopTime, formatElapsedTime (diffUTCTime stopTime timerStartTime)]
       fields =
         [ formatTime' timerStartTime
         ]
@@ -45,11 +53,10 @@ timerBox Timer {..} =
 formatTime' :: UTCTime -> Text
 formatTime' = pack . formatTime defaultTimeLocale "%F %R"
 
-formatElapsedTime :: UTCTime -> UTCTime -> Text
-formatElapsedTime startTime stopTime = pack diffFormatted
+formatElapsedTime :: NominalDiffTime -> Text
+formatElapsedTime diff = pack diffFormatted
   where
     diffFormatted = formatTime defaultTimeLocale formatString diff
-    diff = diffUTCTime stopTime startTime
     diffSeconds = nominalDiffTimeToSeconds diff
     formatString = mkFormatString diffSeconds
     mkFormatString seconds
