@@ -80,7 +80,7 @@ library
 
     -- Other library packages from which modules are imported.
     build-depends:
-      base ^>=4.18.2.1,
+      base,
       boxes,
       containers,
       directory,
@@ -112,7 +112,7 @@ executable tete
 
     -- Other library packages from which modules are imported.
     build-depends:
-      base ^>=4.18.2.1,
+      base,
       tete,
       boxes,
       containers,
@@ -154,7 +154,7 @@ test-suite tete-test
 
     -- Test dependencies.
     build-depends:
-        base ^>=4.18.2.1,
+        base,
         containers,
         hspec,
         tete,
