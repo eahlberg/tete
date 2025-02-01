@@ -18,10 +18,11 @@
           isShell = false;
         };
       in {
-        packages = { tete = tete; };
-
-        defaultPackage =
-          pkgs.haskell.lib.justStaticExecutables self.packages.${system}.tete;
+        packages = {
+          tete = tete;
+          default =
+            pkgs.haskell.lib.justStaticExecutables self.packages.${system}.tete;
+        };
 
         devShells = {
           default = import ./. {
