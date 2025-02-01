@@ -37,6 +37,7 @@ main = hspec $ do
     it "should pretty print a timer" $ do
       let actual = tasksText [task]
 
+      True `shouldBe` False
       actual `shouldSatisfy` isInfixOf "foo-bar"
       actual `shouldSatisfy` isInfixOf "2020-01-01 00:00"
       actual `shouldSatisfy` isInfixOf "2020-01-01 00:01"
