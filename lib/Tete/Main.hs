@@ -36,7 +36,7 @@ commandParser =
 getDbLocation :: IO String
 getDbLocation =
   do
-    let envVar = "TETE_DB_LOCATION"
+    let envVar = "TETE_DB_DIR"
     userSuppliedDir <- System.getEnv envVar
     case userSuppliedDir of
       Nothing -> do
