@@ -64,7 +64,7 @@ list :: Connection -> IO ()
 list conn = do
   timers <- getTimers conn
   now <- getCurrentTime
-  tputStrLn $ PrettyPrint.tasksText now timers
+  putStrLn $ PrettyPrint.tasksText now timers
 
 checkAndRunMigrations :: Connection -> IO ()
 checkAndRunMigrations conn =
