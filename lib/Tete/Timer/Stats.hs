@@ -1,14 +1,20 @@
-module Tete.Timer.Stats where
+module Tete.Timer.Stats (timerTotalTime, taskTotalTime) where
 
 import Data.Maybe (fromMaybe)
+import Data.Set qualified as Set
 import Data.Time
 import Tete.Prelude
 import Tete.Timer.Timer
 
-totalTime :: UTCTime -> Timer -> NominalDiffTime
-totalTime now Timer {..} =
+timerTotalTime :: UTCTime -> Timer -> NominalDiffTime
+timerTotalTime now Timer {..} =
   let stopTime = fromMaybe now timerStopTime
    in diffUTCTime stopTime timerStartTime
 
 timersTotalTime :: UTCTime -> [Timer] -> NominalDiffTime
-timersTotalTime now timers = sum $ totalTime now <$> timers
+timersTotalTime now = sum . fmap (timerTotalTime now)
+
+taskTotalTime :: UTCTime -> Task -> NominalDiffTime
+taskTotalTime now task = timersTotalTime now timers
+  where
+    timers = Set.toList $ taskPeriods task
