@@ -4,32 +4,28 @@ import Data.Set qualified as Set
 import Data.Text as Text
 import Data.Time
 import Tete.Prelude
+import Tete.Timer.Stats qualified as Stats
 import Tete.Timer.Timer
 import Text.PrettyPrint.Boxes hiding ((<>))
 
-tasksText :: [Task] -> Text
-tasksText tasks =
-  pack $ render $ vsep 1 left [taskBoxes tasks]
+tasksText :: UTCTime -> [Task] -> Text
+tasksText now tasks =
+  pack $ render $ vsep 1 left [taskBoxes now tasks]
 
-taskBoxes :: [Task] -> Box
-taskBoxes = vsep 1 left . fmap taskBox
+taskBoxes :: UTCTime -> [Task] -> Box
+taskBoxes now = vsep 1 left . fmap (taskBox now)
 
-totalTime :: Timer -> Maybe NominalDiffTime
-totalTime Timer {..} = diffUTCTime <$> timerStopTime <*> pure timerStartTime
-
-taskBox :: Task -> Box
-taskBox Task {..} =
+taskBox :: UTCTime -> Task -> Box
+taskBox now Task {..} =
   let timerList = Set.toList taskPeriods
       header = [text (unpack taskName)]
       body =
         case timerList of
           [] -> [text "No timers"]
           _ -> timerBox <$> timerList
-      mTimersTotalTime = (fmap sum . mapM totalTime) timerList
       footer =
-        case mTimersTotalTime of
-          Nothing -> mempty
-          Just timersTotalTime -> [text (unpack (Text.intercalate ": " ["Total time", formatElapsedTime timersTotalTime]))]
+        let total = Stats.timersTotalTime now timerList
+         in [text (unpack (Text.intercalate ": " ["Total time", formatElapsedTime total]))]
    in vsep 0 left (header <> body <> footer)
 
 timerBox :: Timer -> Box

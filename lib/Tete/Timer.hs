@@ -61,8 +61,10 @@ getTimers conn =
       Just rows -> pure $ timersFromRows rows
 
 list :: Connection -> IO ()
-list conn =
-  tputStrLn . PrettyPrint.tasksText =<< getTimers conn
+list conn = do
+  timers <- getTimers conn
+  now <- getCurrentTime
+  tputStrLn $ PrettyPrint.tasksText now timers
 
 checkAndRunMigrations :: Connection -> IO ()
 checkAndRunMigrations conn =
