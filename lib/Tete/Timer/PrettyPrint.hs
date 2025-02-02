@@ -4,12 +4,13 @@ import Data.List qualified as List
 import Data.Set qualified as Set
 import Data.Time
 import Tete.Prelude
+import Tete.Timer.Format qualified as Format
 import Tete.Timer.Stats qualified as Stats
 import Tete.Timer.Timer
 import Text.PrettyPrint.Boxes hiding ((<>))
 
 summaryText :: UTCTime -> [Task] -> String
-summaryText now tasks = formatElapsedTime total
+summaryText now tasks = Format.formatElapsedTime total
   where
     total = sum $ Stats.taskTotalTime now <$> tasks
 
@@ -30,7 +31,7 @@ taskBox now task@Task {..} =
           _ -> timerBox <$> timerList
       footer =
         let total = Stats.taskTotalTime now task
-         in [text (List.intercalate ": " ["Total time", formatElapsedTime total])]
+         in [text (List.intercalate ": " ["Total time", Format.formatElapsedTime total])]
    in vsep 0 left (header <> body <> footer)
 
 timerBox :: Timer -> Box
@@ -40,9 +41,9 @@ timerBox Timer {..} =
           Nothing ->
             ["RUNNING"]
           Just stopTime ->
-            [formatTime' stopTime, formatElapsedTime (diffUTCTime stopTime timerStartTime)]
+            [Format.formatTimestamp stopTime, Format.formatElapsedTime (diffUTCTime stopTime timerStartTime)]
       fields =
-        [ formatTime' timerStartTime
+        [ Format.formatTimestamp timerStartTime
         ]
       desc =
         case timerDescription of
@@ -50,18 +51,3 @@ timerBox Timer {..} =
           Nothing -> []
       boxes = fmap text (fields <> timeFields <> desc)
    in punctuateH left (char '|') boxes
-
-formatTime' :: UTCTime -> String
-formatTime' = formatTime defaultTimeLocale "%F %R"
-
-formatElapsedTime :: NominalDiffTime -> String
-formatElapsedTime diff = diffFormatted
-  where
-    diffFormatted = formatTime defaultTimeLocale formatString diff
-    diffSeconds = nominalDiffTimeToSeconds diff
-    formatString = mkFormatString diffSeconds
-    mkFormatString seconds
-      | seconds < 60 = "%Ss"
-      | seconds >= 60 && seconds < 3600 = "%Mmin"
-      | seconds >= 3600 && seconds < 86400 = "%Hh %Mmin"
-      | otherwise = "%Dd %Hh %Mmin"
