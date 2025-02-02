@@ -69,7 +69,8 @@ library
       Tete.Timer.PrettyPrint,
       Tete.Timer.Stats,
       Tete.Timer,
-      Tete.Timer.Timer
+      Tete.Timer.Timer,
+      Tete.Timer.Format
 
     -- Modules included in this library but not exported.
     other-modules:

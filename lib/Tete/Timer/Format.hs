@@ -4,7 +4,7 @@ module Tete.Timer.Format
   )
 where
 
-import Data.Time (NominalDiffTime, UTCTime, defaultTimeLocale, nominalDiffTimeToSeconds)
+import Data.Time (NominalDiffTime, defaultTimeLocale, nominalDiffTimeToSeconds)
 import qualified Data.Time as Time
 import Tete.Prelude
 

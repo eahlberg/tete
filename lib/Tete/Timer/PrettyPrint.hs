@@ -9,14 +9,15 @@ import Tete.Timer.Stats qualified as Stats
 import Tete.Timer.Timer
 import Text.PrettyPrint.Boxes hiding ((<>))
 
-summaryText :: UTCTime -> [Task] -> String
-summaryText now tasks = Format.formatElapsedTime total
+summaryText :: UTCTime -> [Task] -> Box
+summaryText now tasks =
+  text (List.intercalate ": " ["Total time", Format.formatElapsedTime total])
   where
     total = sum $ Stats.taskTotalTime now <$> tasks
 
 tasksText :: UTCTime -> [Task] -> String
 tasksText now tasks =
-  render $ vsep 1 left [taskBoxes now tasks, text (summaryText now tasks)]
+  render $ vsep 1 left [taskBoxes now tasks, summaryText now tasks]
 
 taskBoxes :: UTCTime -> [Task] -> Box
 taskBoxes now = vsep 1 left . fmap (taskBox now)
