@@ -15,9 +15,9 @@ summaryText now tasks =
   where
     total = sum $ Stats.taskTotalTime now <$> tasks
 
-tasksText :: UTCTime -> [Task] -> String
+tasksText :: UTCTime -> [Task] -> Text
 tasksText now tasks =
-  render $ vsep 1 left [taskBoxes now tasks, summaryText now tasks]
+  pack $ render $ vsep 1 left [taskBoxes now tasks, summaryText now tasks]
 
 taskBoxes :: UTCTime -> [Task] -> Box
 taskBoxes now = vsep 1 left . fmap (taskBox now)

@@ -12,7 +12,7 @@ timerTotalTime now Timer {..} =
    in diffUTCTime stopTime timerStartTime
 
 timersTotalTime :: UTCTime -> [Timer] -> NominalDiffTime
-timersTotalTime now timers = sum $ timerTotalTime now <$> timers
+timersTotalTime now = sum . fmap (timerTotalTime now)
 
 taskTotalTime :: UTCTime -> Task -> NominalDiffTime
 taskTotalTime now task = timersTotalTime now timers

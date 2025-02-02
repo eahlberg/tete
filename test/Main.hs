@@ -20,39 +20,66 @@ jan1 = UTCTime (fromGregorian 2020 1 1)
 jan2 :: DiffTime -> UTCTime
 jan2 = UTCTime (fromGregorian 2020 1 2)
 
+jan3 :: DiffTime -> UTCTime
+jan3 = UTCTime (fromGregorian 2020 1 3)
+
 main :: IO ()
 main = hspec $ do
   describe "taskText" $ do
     it "should return data for stopped timers" $ do
-      let timer =
+      let timer1 =
             Timer
               { timerId = 2,
                 timerStartTime = jan1 0,
                 timerStopTime = Just $ jan1 60,
                 timerCreatedAt = dummyTime,
                 timerUpdatedAt = Nothing,
-                timerDescription = Just "stopped timer"
+                timerDescription = Just "first timer"
               }
 
-      let task =
+      let task1 =
             Task
               { taskId = 1,
-                taskName = "task name",
+                taskName = "first task",
                 taskCreatedAt = jan1 0,
                 taskUpdatedAt = Nothing,
-                taskPeriods = Set.fromList [timer]
+                taskPeriods = Set.fromList [timer1]
+              }
+
+      let timer2 =
+            Timer
+              { timerId = 2,
+                timerStartTime = jan3 0,
+                timerStopTime = Just $ jan3 3600,
+                timerCreatedAt = dummyTime,
+                timerUpdatedAt = Nothing,
+                timerDescription = Just "second timer"
+              }
+
+      let task2 =
+            Task
+              { taskId = 1,
+                taskName = "second task",
+                taskCreatedAt = jan1 0,
+                taskUpdatedAt = Nothing,
+                taskPeriods = Set.fromList [timer2]
               }
 
       let now = dummyTime
-      let actual = PrettyPrint.tasksText now [task]
+      let actual = PrettyPrint.tasksText now [task1, task2]
 
-      actual `shouldSatisfy` isInfixOf "task name"
+      actual `shouldSatisfy` isInfixOf "first task"
+      actual `shouldSatisfy` isInfixOf "second task"
 
       actual `shouldSatisfy` isInfixOf "2020-01-01 00:00"
       actual `shouldSatisfy` isInfixOf "2020-01-01 00:01"
-      actual `shouldSatisfy` isInfixOf "stopped timer"
+      actual `shouldSatisfy` isInfixOf "first timer"
 
-      actual `shouldSatisfy` isInfixOf "Total time: 1min"
+      actual `shouldSatisfy` isInfixOf "2020-01-03 00:00"
+      actual `shouldSatisfy` isInfixOf "2020-01-03 01:00"
+      actual `shouldSatisfy` isInfixOf "second timer"
+
+      actual `shouldSatisfy` isInfixOf "Total time: 1h 1min"
 
     it "should return data for stopped and running timers" $ do
       let stoppedTimer =
