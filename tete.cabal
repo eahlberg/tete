@@ -67,6 +67,7 @@ library
     exposed-modules:
       Tete.Main,
       Tete.Timer.PrettyPrint,
+      Tete.Timer.Stats,
       Tete.Timer,
       Tete.Timer.Timer
 
