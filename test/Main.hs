@@ -98,7 +98,7 @@ main = hspec $ do
 
       actual `shouldSatisfy` isInfixOf "Total time: 3min"
 
-  describe "totalTime" $ do
+  describe "timerTotalTime" $ do
     it "should return sum of start and stop if the timer has stopped" $ do
       let timer =
             Timer
@@ -110,7 +110,7 @@ main = hspec $ do
                 timerDescription = Nothing
               }
       let now = jan1 200
-      let actual = Stats.totalTime now timer
+      let actual = Stats.timerTotalTime now timer
 
       actual `shouldBe` secondsToNominalDiffTime 100
 
@@ -125,6 +125,6 @@ main = hspec $ do
                 timerDescription = Nothing
               }
       let now = jan1 50
-      let actual = Stats.totalTime now timer
+      let actual = Stats.timerTotalTime now timer
 
       actual `shouldBe` secondsToNominalDiffTime 50

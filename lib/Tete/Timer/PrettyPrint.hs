@@ -16,7 +16,7 @@ taskBoxes :: UTCTime -> [Task] -> Box
 taskBoxes now = vsep 1 left . fmap (taskBox now)
 
 taskBox :: UTCTime -> Task -> Box
-taskBox now Task {..} =
+taskBox now task@Task {..} =
   let timerList = Set.toList taskPeriods
       header = [text (unpack taskName)]
       body =
@@ -24,7 +24,7 @@ taskBox now Task {..} =
           [] -> [text "No timers"]
           _ -> timerBox <$> timerList
       footer =
-        let total = Stats.timersTotalTime now timerList
+        let total = Stats.taskTotalTime now task
          in [text (unpack (Text.intercalate ": " ["Total time", formatElapsedTime total]))]
    in vsep 0 left (header <> body <> footer)
 
