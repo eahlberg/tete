@@ -1,3 +1,5 @@
+{-# LANGUAGE CPP #-}
+
 module Tete.Prelude
   ( module Export,
     tshow,
@@ -8,7 +10,11 @@ where
 import Control.Applicative as Export
 import Control.Monad as Export
 import Control.Monad.Extra as Export (whenJust)
+#if !MIN_VERSION_base(4,19,0)
+import Data.Functor as Export
+#else
 import Data.Functor as Export hiding (unzip)
+#endif
 import Data.List.NonEmpty
 import Data.List.NonEmpty as Export (NonEmpty)
 import Data.Maybe as Export (mapMaybe)
