@@ -8,7 +8,7 @@ where
 import Control.Applicative as Export
 import Control.Monad as Export
 import Control.Monad.Extra as Export (whenJust)
-import Data.Functor as Export
+import Data.Functor as Export hiding (unzip)
 import Data.List.NonEmpty
 import Data.List.NonEmpty as Export (NonEmpty)
 import Data.Maybe as Export (mapMaybe)
